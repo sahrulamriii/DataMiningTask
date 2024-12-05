@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Recommendation</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Recipe Recommendation</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="ingredient1">Ingredient 1:</label>
+                <input type="text" class="form-control" id="ingredient1" name="ingredient1" required>
+            </div>
+            <div class="form-group">
+                <label for="ingredient2">Ingredient 2:</label>
+                <input type="text" class="form-control" id="ingredient2" name="ingredient2" required>
+            </div>
+            <div class="form-group">
+                <label for="ingredient3">Ingredient 3:</label>
+                <input type="text" class="form-control" id="ingredient3" name="ingredient3" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        {% if recommendations %}
+            <h2 class="mt-5">Recommended Recipes</h2>
+            <div class="list-group">
+                {% for recipe in recommendations %}
+                    <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#recipeModal" 
+                        data-title="{{ recipe['Title'] }}" 
+                        data-ingredients="{{ recipe['Ingredients'] }}" 
+                        data-steps="{{ recipe['Steps'] }}" 
+                        data-image="{{ recipe['image_url'] }}">
+                        {{ recipe['Title'] }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="recipeModal" tabindex="-1" role="dialog" aria-labelledby="recipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModalLabel">Recipe Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modalTitle"></h4>
+                    <img id="modalImage" src="" alt="Recipe Image" class="img-fluid mb-3">
+                    <h5>Ingredients:</h5>
+                    <pre id="modalIngredients"></pre>
+                    <h5>Steps:</h5>
+                    <pre id="modalSteps"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Set modal content dynamically based on clicked recipe
+        $('#recipeModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var title = button.data('title');
+            var ingredients = button.data('ingredients');
+            var steps = button.data('steps');
+            var image = button.data('image');
+
+            // Update the modal's content
+            var modal = $(this);
+            modal.find('#modalTitle').text(title);
+            modal.find('#modalIngredients').text(ingredients);
+            modal.find('#modalSteps').text(steps);
+            modal.find('#modalImage').attr('src', image);
+        });
+    </script>
+</body>
+</html>
